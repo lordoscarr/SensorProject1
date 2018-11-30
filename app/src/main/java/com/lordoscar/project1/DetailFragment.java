@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class DetailFragment extends DialogFragment implements SensorEventListener {
 
     @Override
@@ -60,11 +63,19 @@ public class DetailFragment extends DialogFragment implements SensorEventListene
         versionText.setText(sensor.getVersion()+ "");
     }
 
+    private String fromTimestamp(long timestamp){
+        long timeInMillis = (new Date()).getTime()
+                + (timestamp - System.nanoTime()) / 1000000L;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss:SS");
+        return dateFormat.format(new Date(timeInMillis));
+    }
+
     public void updateValues(SensorEvent sensorEvent){
         StringBuilder sb = new StringBuilder();
 
         sb.append("Accuracy: " + sensorEvent.accuracy);
-        sb.append("\nTimestamp: " + sensorEvent.timestamp);
+        sb.append("\nTimestamp: " + fromTimestamp(sensorEvent.timestamp));
         int count = 0;
         for(float value : sensorEvent.values){
             sb.append("\nValue " + count++ + ": " + value);
